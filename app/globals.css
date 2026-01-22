@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face{
-  font-family: "MyFont";
-  src: url("/public/fonts/Sheftira\ DEMO\ VERSION.otf")
-}
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -22,7 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif, "MyFonts";
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
@@ -31,16 +26,13 @@ body {
   }
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE & Edge */
-  scrollbar-width: none;     /* Firefox */
-}
-
-html {
-  scroll-behavior: smooth;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 

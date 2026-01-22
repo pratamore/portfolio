@@ -1,126 +1,98 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-
-const menu = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Skill", href: "#skill" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Contact", href: "#contact" },
-];
+import { useState } from "react";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      setOpen(false);
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsOpen(false);
+  };
 
   return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 w-full z-50"
-    >
-      {/* 🔥 ANIMATED BACKGROUND */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.15, duration: 0.5 }}
-        className={`
-          absolute inset-0
-          transition-all duration-500
-          ${
-            scrolled
-              ? "bg-black/70 backdrop-blur-xl border-b border-white/10"
-              : "bg-black/40 backdrop-blur-md"
-          }
-        `}
-      />
+    <nav className="fixed top-0 left-0 right-0 bg-black shadow-lg shadow-cyan-500/20 z-50 border-b border-cyan-500/30 overflow-hidden transition-all duration-300">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        
+        {/* LOGO (KEMBALI) */}
+        <div className="text-2xl font-bold text-sky-400">
+          AGUNG
+        </div>
 
-      <div className="relative bg-[#0B272F] w-full mx-auto px-10 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <motion.h1
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-xl md:text-2xl font-extrabold text-white tracking-wide"
-        >
-          Agung
-        </motion.h1>
-
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-10 text-sm font-semibold">
-          {menu.map((item, i) => (
-            <motion.li
-              key={item.label}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + i * 0.08 }}
-              className="group relative"
+        {/* DESKTOP MENU (TETAP) */}
+        <div className="hidden md:flex space-x-4">
+          {[
+            ["hero", "Home"],
+            ["about", "About"],
+            ["skills", "Skill"],
+            ["projects", "Projects"],
+            ["contact", "Contact"],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className="text-white font-semibold hover:text-cyan-400 hover:bg-cyan-400/10 px-3 py-2 rounded-lg transition-all duration-300 hover:scale-105"
             >
-              <Link
-                href={item.href}
-                className="text-white/80 transition group-hover:text-white"
-              >
-                {item.label}
-              </Link>
-
-              <span className="absolute left-0 -bottom-2 h-[2px] w-0 bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-300 group-hover:w-full" />
-              <span className="absolute -inset-2 rounded-lg opacity-0 blur-lg bg-cyan-400/20 transition group-hover:opacity-100 pointer-events-none" />
-            </motion.li>
+              {label}
+            </button>
           ))}
-        </ul>
+        </div>
 
-        {/* Mobile Button */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-2xl text-white"
-        >
-          {open ? "✕" : "☰"}
-        </button>
+        {/* HAMBURGER */}
+        <div className="md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-gray-300 hover:text-cyan-400 focus:outline-none drop-shadow-[0_0_5px_rgba(156,163,175,0.5)] transition"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
-      <motion.div
-  animate={open ? "open" : "closed"}
-  variants={{
-    open: { height: "auto", opacity: 1 },
-    closed: { height: 0, opacity: 0 },
-  }}
-  transition={{ duration: 0.4, ease: "easeInOut" }}
-  className="md:hidden overflow-hidden z-40 relative"
->
-  <div className="bg-[#0B272F] border-t border-white/10">
-    {menu.map((item) => (
-      <Link
-        key={item.label}
-        href={item.href}
-        onClick={() => setOpen(false)}
-        className="
-          block px-6 py-4
-          text-center text-lg font-semibold
-          text-white
-          hover:bg-white/10
-          transition
-        "
+      {/* MOBILE MENU — DI DALAM NAVBAR */}
+      <div
+        className={`md:hidden bg-gray-900/95 backdrop-blur-md border-t border-cyan-500/30 transition-all duration-300
+        ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
       >
-        {item.label}
-      </Link>
-    ))}
-  </div>
-</motion.div>
-
-    </motion.nav>
+        <div className="px-4 py-4 space-y-1">
+          {[
+            ["hero", "Home", "fa-home"],
+            ["about", "About", "fa-user"],
+            ["skills", "Skill", "fa-code"],
+            ["projects", "Project", "fa-project-diagram"],
+            ["contact", "Contact", "fa-envelope"],
+          ].map(([id, label, icon]) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className="font-semibold block w-full text-left text-white
+              hover:text-cyan-400 hover:bg-cyan-400/10
+              px-4 py-3 rounded-lg
+              transition-all duration-300
+              hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20"
+            >
+              <i className={`fas ${icon} mr-3`}></i>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 }

@@ -1,101 +1,115 @@
 "use client";
 
-import Link from "next/link";
-import {
-  FaGithub,
-  FaLinkedin,
-  FaInstagram,
-  FaEnvelope,
-} from "react-icons/fa";
-
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="relative mt-32 border-t border-white/10 bg-black">
-      {/* GLOW TOP */}
-      <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-32 w-[80%] blur-3xl opacity-40 bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600" />
+    <footer className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900 border-t border-cyan-500/20">
+      {/* Glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-magenta-500/5" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-3">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* ================= TOP ================= */}
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-10">
+
           {/* BRAND */}
-          <div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-              Agung Putra
-            </h3>
-            <p className="mt-3 text-sm text-white/70 leading-relaxed">
-              Fullstack Web Developer yang fokus membangun website modern,
-              responsif, dan scalable dengan teknologi terbaru.
+          <div className="text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-magenta-500 rounded-lg flex items-center justify-center mr-2 shadow-md">
+                <span className="text-white text-base font-bold">A</span>
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-magenta-400 bg-clip-text text-transparent">
+                AGUNG
+              </h3>
+            </div>
+
+            {/* Deskripsi: disingkat di mobile */}
+            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-md mx-auto md:mx-0">
+              Web developer fokus pada solusi modern & user-friendly.
             </p>
+
+            {/* SOCIAL */}
+            <div className="flex justify-center md:justify-start gap-3 mt-5">
+              {[
+                { icon: "fab fa-github", link: "https://github.com/pratamore" },
+                { icon: "fab fa-whatsapp", link: "https://wa.me/6285712455030?text=Halo%20Agung%2C%20saya%20ingin%20menghubungi%20Anda" },
+                { icon: "fas fa-envelope", link: "mailto:agungputra2820@gmail.com" },
+              ].map((item, i) => (
+                <a
+                  key={i}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center
+                             hover:bg-cyan-500/20 hover:scale-105 transition-all duration-300"
+                >
+                  <i className={`${item.icon} text-gray-400 hover:text-cyan-400 text-sm`} />
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* NAVIGATION */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-white/80">
-              Navigation
-            </h4>
-            <ul className="mt-4 space-y-2 text-sm text-white/60">
-              <li>
-                <Link href="#home" className="hover:text-cyan-400 transition">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="#about" className="hover:text-cyan-400 transition">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="#projects" className="hover:text-cyan-400 transition">
-                  Projects
-                </Link>
-              </li>
-              <li>
-                <Link href="#contact" className="hover:text-cyan-400 transition">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* LINKS – HANYA DESKTOP */}
+          <div className="hidden md:grid grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-sm font-semibold text-cyan-400 mb-4">
+                Navigasi
+              </h4>
+              <ul className="space-y-2">
+                {["Hero", "About", "Skills", "Projects"].map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href={`#${item.toLowerCase()}`}
+                      className="text-gray-400 hover:text-cyan-400 transition text-sm"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* SOCIAL */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-white/80">
-              Connect
-            </h4>
-            <div className="mt-4 flex gap-4">
-              <a
-                href="https://github.com/"
-                target="_blank"
-                className="rounded-xl bg-white/5 p-3 text-white/70 hover:text-cyan-400 hover:bg-white/10 transition"
-              >
-                <FaGithub />
-              </a>
-              <a
-                href="https://linkedin.com/"
-                target="_blank"
-                className="rounded-xl bg-white/5 p-3 text-white/70 hover:text-cyan-400 hover:bg-white/10 transition"
-              >
-                <FaLinkedin />
-              </a>
-              <a
-                href="https://instagram.com/"
-                target="_blank"
-                className="rounded-xl bg-white/5 p-3 text-white/70 hover:text-cyan-400 hover:bg-white/10 transition"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="mailto:your@email.com"
-                className="rounded-xl bg-white/5 p-3 text-white/70 hover:text-cyan-400 hover:bg-white/10 transition"
-              >
-                <FaEnvelope />
-              </a>
+            <div>
+              <h4 className="text-sm font-semibold text-cyan-400 mb-4">
+                Kontak
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    href= "mailto:agungputra2820@gmail.com?subject=Halo%20Agung&body=Halo%20saya%20tertarik%20dengan%20portfolio%20Anda"
+                    className="text-gray-400 hover:text-cyan-400 transition text-sm"
+                  >
+                    Email
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://wa.me/6285712455030?text=Halo%20Agung%2C%20saya%20ingin%20menghubungi%20Anda"
+                    target="_blank"
+                    className="text-gray-400 hover:text-cyan-400 transition text-sm"
+                  >
+                    Whatsapp
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/pratamore"
+                    target="_blank"
+                    className="text-gray-400 hover:text-cyan-400 transition text-sm"
+                  >
+                    GitHub
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* COPYRIGHT */}
-        <div className="mt-14 border-t border-white/10 pt-6 text-center text-sm text-white/50">
-          © {new Date().getFullYear()} Agung Putra. All rights reserved.
+        {/* ================= BOTTOM ================= */}
+        <div className="border-t border-gray-800 mt-8 pt-4 text-center">
+          <p className="text-gray-500 text-[10px] sm:text-xs">
+            © {currentYear} • Built with Next.js & Tailwind
+          </p>
         </div>
       </div>
     </footer>

@@ -1,6 +1,10 @@
-# TODO: Make Components in page.tsx Responsive
+# TODO: Add Entry Animations to Section Components
 
-- [x] Update main container to use responsive flex layout (flex-col on mobile, flex-row on larger screens)
-- [x] Make TextType font size responsive (text-4xl md:text-6xl)
-- [x] Adjust ProfileCard positioning to be responsive (relative on mobile, fixed on larger screens)
-- [ ] Test layout on different screen sizes
+- [ ] Modify Hero.tsx to add Intersection Observer for entry animations
+- [ ] Modify About.tsx to add Intersection Observer for entry animations
+- [ ] Modify Skills.tsx to add Intersection Observer for entry animations
+- [ ] Modify Projects.tsx to add Intersection Observer for entry animations
+- [ ] Modify Testimonials.tsx to add Intersection Observer for entry animations
+- [ ] Modify Contact.tsx to add Intersection Observer for entry animations
+- [ ] Test animations by clicking navbar buttons
+- [ ] Verify animations work on both desktop and mobile
