@@ -48,7 +48,7 @@ export default function About() {
               <div className="w-64 h-64 bg-gradient-to-br from-cyan-400/20 to-magenta-500/20 rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/20">
                 <div className="w-56 h-56 rounded-full overflow-hidden border-4 border-cyan-400/30">
                   <img
-                    src="/profile.jpg"
+                    src="/foto.jpg"
                     alt="Agung Putra"
                     className="w-full h-full object-cover"
                   />
