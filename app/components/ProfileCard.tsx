@@ -9,23 +9,31 @@ const CARD_SIZE = "clamp(260px, 60vw, 340px)";
 const CARD_RADIUS = "50%";
 
 /* =======================
-   COMPONENT
+   TYPES
 ======================= */
-export default function ProfileCardCircleHolo({
-  avatarUrl = "/profile.jpg",
-  name = "Agung Putra",
-  title = "Web Developer",
-  enableRingGlow = true,
-  minimalOnMobile = true
-}: {
+interface ProfileCardCircleHoloProps {
   avatarUrl: string;
   name?: string;
   title?: string;
   enableRingGlow?: boolean;
   minimalOnMobile?: boolean;
-}) {
+  className?: string; // ✅ FIX ERROR className
+}
+
+/* =======================
+   COMPONENT
+======================= */
+export default function ProfileCardCircleHolo({
+  avatarUrl,
+  name = "Agung Putra",
+  title = "Web Developer",
+  enableRingGlow = true,
+  minimalOnMobile = true,
+  className = ""
+}: ProfileCardCircleHoloProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
   const [isMobile, setIsMobile] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -87,10 +95,10 @@ export default function ProfileCardCircleHolo({
       ref={wrapperRef}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="relative flex items-center justify-center min-h-[420px]"
+      className={`relative flex items-center justify-center min-h-[420px] ${className}`}
       style={{ perspective: "1200px" }}
     >
-      {/* === SHADOW FOLLOW CURSOR === */}
+      {/* === SHADOW === */}
       <div
         className="absolute -z-10 rounded-full blur-3xl transition-all duration-500 ease-out"
         style={{
@@ -143,7 +151,7 @@ export default function ProfileCardCircleHolo({
           `
         }}
       >
-        {/* === INNER GLASS === */}
+        {/* GLASS */}
         <div
           className="absolute inset-0"
           style={{
@@ -154,7 +162,7 @@ export default function ProfileCardCircleHolo({
           }}
         />
 
-        {/* === SHINE === */}
+        {/* SHINE */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -170,23 +178,7 @@ export default function ProfileCardCircleHolo({
           }}
         />
 
-        {/* === GLARE === */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius: CARD_RADIUS,
-            background: `
-              radial-gradient(
-                circle at calc(var(--px,0.5)*100%) calc(var(--py,0.5)*100%),
-                rgba(255,255,255,0.25),
-                rgba(0,0,0,0.95) 75%
-              )
-            `,
-            mixBlendMode: "overlay"
-          }}
-        />
-
-        {/* === AVATAR === */}
+        {/* AVATAR */}
         <img
           src={avatarUrl}
           alt={name}
@@ -197,7 +189,7 @@ export default function ProfileCardCircleHolo({
           }}
         />
 
-        {/* === INFO === */}
+        {/* INFO */}
         {!hideText && (
           <div
             className="absolute bottom-5 px-4 py-2 bg-white/10 backdrop-blur-xl border border-cyan-300/20 rounded-full text-center"
@@ -206,17 +198,12 @@ export default function ProfileCardCircleHolo({
               boxShadow: "0 0 25px rgba(103,232,249,0.6)"
             }}
           >
-            <p className="text-white text-sm font-semibold">
-              {name}
-            </p>
-            <p className="text-cyan-300 text-xs">
-              {title}
-            </p>
+            <p className="text-white text-sm font-semibold">{name}</p>
+            <p className="text-cyan-300 text-xs">{title}</p>
           </div>
         )}
       </div>
 
-      {/* === STYLE === */}
       <style jsx>{`
         @keyframes spin-slow {
           from {

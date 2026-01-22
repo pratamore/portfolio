@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <main className="h-screen overflow-y-scroll scrollbar-hide">
+    <main className="min-h-screen overflow-y-scroll scrollbar-hide">
       <Navbar />
       <Hero />
       <About />
