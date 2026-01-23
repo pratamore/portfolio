@@ -17,7 +17,7 @@ interface ProfileCardCircleHoloProps {
   title?: string;
   enableRingGlow?: boolean;
   minimalOnMobile?: boolean;
-  className?: string; // ✅ FIX ERROR className
+  className?: string;
 }
 
 /* =======================
@@ -29,7 +29,7 @@ export default function ProfileCardCircleHolo({
   title = "Web Developer",
   enableRingGlow = true,
   minimalOnMobile = true,
-  className = ""
+  className = "",
 }: ProfileCardCircleHoloProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -41,16 +41,18 @@ export default function ProfileCardCircleHolo({
      MOBILE DETECT
   ======================= */
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640);
+    const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
 
   /* =======================
-     POINTER EFFECT
+     DESKTOP POINTER EFFECT
   ======================= */
   useEffect(() => {
+    if (isMobile) return;
+
     const card = cardRef.current;
     const wrapper = wrapperRef.current;
     if (!card || !wrapper) return;
@@ -83,7 +85,55 @@ export default function ProfileCardCircleHolo({
       wrapper.removeEventListener("pointermove", move);
       wrapper.removeEventListener("pointerleave", reset);
     };
-  }, []);
+  }, [isMobile]);
+
+  /* =======================
+     MOBILE GYRO EFFECT 🔥
+  ======================= */
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const card = cardRef.current;
+    const wrapper = wrapperRef.current;
+    if (!card || !wrapper) return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      const gamma = e.gamma ?? 0; // left-right (-90 to 90)
+      const beta = e.beta ?? 0;   // front-back (-180 to 180)
+
+      const x = Math.min(Math.max(gamma / 45 + 0.5, 0), 1);
+      const y = Math.min(Math.max(beta / 90 + 0.5, 0), 1);
+
+      wrapper.style.setProperty("--px", `${x}`);
+      wrapper.style.setProperty("--py", `${y}`);
+
+      card.style.transform = `
+        rotateX(${beta * -0.15}deg)
+        rotateY(${gamma * 0.15}deg)
+        scale(1.02)
+      `;
+    };
+
+    // iOS permission
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof (DeviceOrientationEvent as any).requestPermission === "function"
+    ) {
+      (DeviceOrientationEvent as any)
+        .requestPermission()
+        .then((res: string) => {
+          if (res === "granted") {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        });
+    } else {
+      window.addEventListener("deviceorientation", handleOrientation);
+    }
+
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation);
+    };
+  }, [isMobile]);
 
   const hideText = minimalOnMobile && isMobile;
 
@@ -98,9 +148,9 @@ export default function ProfileCardCircleHolo({
       className={`relative flex items-center justify-center min-h-[420px] ${className}`}
       style={{ perspective: "1200px" }}
     >
-      {/* === SHADOW === */}
+      {/* SHADOW */}
       <div
-        className="absolute -z-10 rounded-full blur-3xl transition-all duration-500 ease-out"
+        className="absolute -z-10 rounded-full blur-3xl transition-all duration-500"
         style={{
           width: CARD_SIZE,
           height: CARD_SIZE,
@@ -112,16 +162,11 @@ export default function ProfileCardCircleHolo({
               transparent 70%
             )
           `,
-          transform: `
-            translateX(calc((var(--px,0.5) - 0.5) * 40px))
-            translateY(calc((var(--py,0.5) - 0.5) * 40px))
-            scale(${hovered ? 1.15 : 0.7})
-          `,
-          opacity: hovered ? 1 : 0.55
+          transform: `scale(${hovered || isMobile ? 1.1 : 0.7})`,
         }}
       />
 
-      {/* === RING GLOW === */}
+      {/* RING */}
       {enableRingGlow && (
         <div
           className="absolute rounded-full blur-3xl animate-spin-slow"
@@ -130,15 +175,15 @@ export default function ProfileCardCircleHolo({
             height: CARD_SIZE,
             background:
               "conic-gradient(#67e8f9,#38bdf8,#818cf8,#67e8f9)",
-            opacity: 0.6
+            opacity: 0.6,
           }}
         />
       )}
 
-      {/* === CARD === */}
+      {/* CARD */}
       <div
         ref={cardRef}
-        className="relative grid place-items-center transition-transform duration-300 ease-out"
+        className="relative grid place-items-center transition-transform duration-300"
         style={{
           width: CARD_SIZE,
           height: CARD_SIZE,
@@ -148,55 +193,23 @@ export default function ProfileCardCircleHolo({
           boxShadow: `
             0 0 40px rgba(103,232,249,0.6),
             0 0 90px rgba(56,189,248,0.35)
-          `
+          `,
         }}
       >
-        {/* GLASS */}
-        <div
-          className="absolute inset-0"
-          style={{
-            borderRadius: CARD_RADIUS,
-            background:
-              "linear-gradient(145deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02))",
-            backdropFilter: "blur(30px)"
-          }}
-        />
-
-        {/* SHINE */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius: CARD_RADIUS,
-            background: `
-              radial-gradient(
-                circle at calc(var(--px,0.5)*100%) calc(var(--py,0.5)*100%),
-                rgba(255,255,255,0.45),
-                transparent 65%
-              )
-            `,
-            mixBlendMode: "color-dodge"
-          }}
-        />
-
-        {/* AVATAR */}
         <img
           src={avatarUrl}
           alt={name}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             borderRadius: CARD_RADIUS,
-            transform: "translateZ(45px)"
+            transform: "translateZ(45px)",
           }}
         />
 
-        {/* INFO */}
         {!hideText && (
           <div
-            className="absolute bottom-5 px-4 py-2 bg-white/10 backdrop-blur-xl border border-cyan-300/20 rounded-full text-center"
-            style={{
-              transform: "translateZ(65px)",
-              boxShadow: "0 0 25px rgba(103,232,249,0.6)"
-            }}
+            className="absolute bottom-5 px-4 py-2 bg-white/10 backdrop-blur-xl rounded-full text-center"
+            style={{ transform: "translateZ(65px)" }}
           >
             <p className="text-white text-sm font-semibold">{name}</p>
             <p className="text-cyan-300 text-xs">{title}</p>
