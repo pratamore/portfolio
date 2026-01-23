@@ -18,28 +18,61 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="hero" className="min-h-screen flex items-center bg-black text-white">
+    <section
+      ref={sectionRef}
+      id="hero"
+      className="min-h-screen flex items-center bg-black text-white"
+    >
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col lg:flex-row items-center justify-between">
 
-          <div className={`lg:w-1/2 lg:order-2 flex justify-center mb-8 lg:mb-0 ${
-            isVisible ? "animate-fadeInUp" : "opacity-0"
-          }`}>
+          {/* Profile Card */}
+          <div
+            className={`lg:w-1/2 lg:order-2 flex justify-center mb-8 lg:mb-0 ${
+              isVisible ? "animate-fadeInUp" : "opacity-0"
+            }`}
+          >
             <ProfileCard
               avatarUrl="/profile.jpg"
               className="scale-75 md:scale-90 lg:scale-100"
             />
           </div>
 
-          <div className={`lg:w-1/2 lg:order-1 text-center lg:text-left ${
-            isVisible ? "animate-fadeInUp" : "opacity-0"
-          }`}>
+          {/* Text Content */}
+          <div
+            className={`lg:w-1/2 lg:order-1 text-center lg:text-left ${
+              isVisible ? "animate-fadeInUp" : "opacity-0"
+            }`}
+          >
             <h1 className="text-4xl md:text-6xl font-bold mb-4 text-cyan-400">
-              Selamat Datang di Portofolio Saya
+              Welcome To My Portfolio
             </h1>
-            <p className="text-lg text-gray-300">
-              Saya adalah web developer yang fokus pada UI modern & interaktif.
+
+            <p className="text-lg text-gray-300 mb-8">
+              Saya adalah Fullstack Developer yang berfokus pada pengembangan aplikasi web modern, scalable, dan efisien. Berpengalaman mengerjakan sisi frontend menggunakan Next.js, React, dan Tailwind CSS, serta backend dengan API, database, dan integrasi server.
             </p>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              {/* Download CV */}
+              <a
+                href="/cv/Ade-CV.pdf"
+                download
+                className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-black font-semibold transition-all duration-300"
+              >
+                Download CV
+              </a>
+
+              {/* Contact Me - WhatsApp */}
+              <a
+                href="https://wa.me/6285712455030"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 rounded-xl border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black font-semibold transition-all duration-300"
+              >
+                Contact Me
+              </a>
+            </div>
           </div>
 
         </div>

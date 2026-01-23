@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import DOMPurify from "dompurify";
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,6 @@ export default function Contact() {
       bgColor: "bg-pink-500",
       hoverBg: "hover:bg-pink-600",
     },
-
   ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,10 +49,31 @@ export default function Contact() {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
+    // 🛑 Honeypot anti bot
+    if (formData.get("company")) {
+      setLoading(false);
+      return;
+    }
+
+    // 🔐 SANITIZE INPUT (ANTI XSS)
+    const cleanData = new FormData();
+    cleanData.append(
+      "name",
+      DOMPurify.sanitize(String(formData.get("name") || ""))
+    );
+    cleanData.append(
+      "email",
+      DOMPurify.sanitize(String(formData.get("email") || ""))
+    );
+    cleanData.append(
+      "message",
+      DOMPurify.sanitize(String(formData.get("message") || ""))
+    );
+
     try {
       const response = await fetch("https://formspree.io/f/xdanzdbr", {
         method: "POST",
-        body: formData,
+        body: cleanData,
         headers: {
           Accept: "application/json",
         },
@@ -63,7 +84,7 @@ export default function Contact() {
           type: "success",
           message: "Pesan berhasil dikirim. Terima kasih! 🚀",
         });
-        form.reset(); // ⬅️ AUTO RESET
+        form.reset();
       } else {
         setAlert({
           type: "error",
@@ -88,11 +109,11 @@ export default function Contact() {
       <div className="absolute inset-0 bg-gradient-to-r from-magenta-500/5 via-transparent to-cyan-500/5"></div>
 
       <div className="container mx-auto px-4 text-center relative z-10">
-        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+        <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
           Contact Me
         </h2>
 
-        {/* Social Icons */}
+        {/* SOCIAL LINKS */}
         <div className="flex flex-wrap justify-center gap-6 mb-12">
           {socialLinks.map((link) => (
             <a
@@ -100,17 +121,17 @@ export default function Contact() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${link.bgColor} ${link.hoverBg} p-4 rounded-full transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-cyan-500/30`}
+              className={`${link.bgColor} ${link.hoverBg} p-4 rounded-full transition-all duration-500 hover:scale-110`}
             >
-              <i className={`${link.icon} text-white text-xl`}></i>
+              <i className={`${link.icon} text-white text-xl`} />
             </a>
           ))}
         </div>
 
-        {/* ALERT CONTAINER */}
+        {/* ALERT */}
         {alert && (
           <div
-            className={`max-w-md mx-auto mb-6 relative rounded-xl border p-4 text-left animate-fadeInUp
+            className={`max-w-md mx-auto mb-6 rounded-xl border p-4 text-left
               ${
                 alert.type === "success"
                   ? "bg-green-500/10 border-green-500 text-green-400"
@@ -119,8 +140,7 @@ export default function Contact() {
           >
             <button
               onClick={() => setAlert(null)}
-              className="absolute top-3 right-3 text-white/60 hover:text-white transition"
-              aria-label="Close alert"
+              className="float-right text-white/60 hover:text-white"
             >
               ✕
             </button>
@@ -136,12 +156,21 @@ export default function Contact() {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* HONEYPOT (HIDDEN) */}
+              <input
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+              />
+
               <input
                 type="text"
                 name="name"
                 required
                 placeholder="Nama Anda"
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white"
               />
 
               <input
@@ -149,7 +178,7 @@ export default function Contact() {
                 name="email"
                 required
                 placeholder="Email Anda"
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white"
               />
 
               <textarea
@@ -157,13 +186,13 @@ export default function Contact() {
                 rows={4}
                 required
                 placeholder="Pesan Anda"
-                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all resize-none"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white resize-none"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 text-white py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 text-white py-3 rounded-lg font-semibold disabled:opacity-50"
               >
                 {loading ? "Mengirim..." : "Kirim Pesan"}
               </button>
