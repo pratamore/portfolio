@@ -145,7 +145,7 @@ export default function ProfileCardCircleHolo({
       ref={wrapperRef}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center min-h-[420px] ${className}`}
+      className={`relative flex items-center justify-center min-h-[300px] pt-10 ${className}`}
       style={{ perspective: "1200px" }}
     >
       {/* SHADOW */}

@@ -40,7 +40,7 @@ export default function Hero() {
 
           {/* Text Content */}
           <div
-            className={`lg:w-1/2 lg:order-1 text-center lg:text-left -mt-6 sm:-mt-4 lg:mt-0 ${
+            className={`lg:w-1/2 lg:order-1 text-center lg:text-left -mt-1 sm:-mt-3 lg:mt-0 ${
               isVisible ? "animate-fadeInUp" : "opacity-0"
             }`}
           >
