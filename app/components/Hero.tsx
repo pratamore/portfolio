@@ -1,81 +1,155 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import ProfileCard from "./ProfileCard";
+import React, { useRef, useEffect, useState } from "react";
 
-export default function Hero() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+/* =======================
+   TYPES
+======================= */
+interface ProfileCardProps {
+  avatarUrl: string;
+  className?: string;
+}
 
+/* =======================
+   CONFIG
+======================= */
+const CARD_SIZE = "clamp(240px, 55vw, 320px)";
+
+export default function ProfileCard({
+  avatarUrl,
+  className = "",
+}: ProfileCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  /* =======================
+     MOBILE DETECT
+  ======================= */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && setIsVisible(true),
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
+  /* =======================
+     DESKTOP HOVER (SMOOTH)
+  ======================= */
+  useEffect(() => {
+    if (isMobile) return;
+
+    const wrapper = wrapperRef.current;
+    const card = cardRef.current;
+    if (!wrapper || !card) return;
+
+    let rafId: number;
+
+    const move = (e: PointerEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const r = wrapper.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+
+        card.style.transform = `
+          rotateX(${y * -10}deg)
+          rotateY(${x * 10}deg)
+          scale(1.03)
+        `;
+      });
+    };
+
+    const reset = () => {
+      card.style.transform =
+        "rotateX(0deg) rotateY(0deg) scale(1)";
+    };
+
+    wrapper.addEventListener("pointermove", move);
+    wrapper.addEventListener("pointerleave", reset);
+
+    return () => {
+      wrapper.removeEventListener("pointermove", move);
+      wrapper.removeEventListener("pointerleave", reset);
+      cancelAnimationFrame(rafId);
+    };
+  }, [isMobile]);
+
+  /* =======================
+     MOBILE GYRO (SMOOTH)
+  ======================= */
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    let rafId: number;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const gamma = e.gamma ?? 0;
+        const beta = e.beta ?? 0;
+
+        card.style.transform = `
+          rotateX(${beta * -0.08}deg)
+          rotateY(${gamma * 0.08}deg)
+          scale(1.02)
+        `;
+      });
+    };
+
+    window.addEventListener("deviceorientation", handleOrientation);
+
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation);
+      cancelAnimationFrame(rafId);
+    };
+  }, [isMobile]);
+
+  /* =======================
+     RENDER
+  ======================= */
   return (
-    <section
-      ref={sectionRef}
-      id="hero"
-      className="min-h-screen flex items-center bg-black text-white"
+    <div
+      ref={wrapperRef}
+      className={`relative flex items-center justify-center ${className}`}
+      style={{ perspective: "1200px" }}
     >
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex flex-col lg:flex-row items-center lg:items-center gap-4 lg:gap-12">
+      {/* Glow */}
+      <div
+        className="absolute -z-10 rounded-full blur-3xl"
+        style={{
+          width: CARD_SIZE,
+          height: CARD_SIZE,
+          background:
+            "radial-gradient(circle, rgba(34,211,238,0.45), transparent 70%)",
+        }}
+      />
 
-          {/* Profile Card */}
-          <div
-            className={`lg:w-1/2 lg:order-2 flex justify-center ${
-              isVisible ? "animate-fadeInUp" : "opacity-0"
-            }`}
-          >
-            <ProfileCard
-              avatarUrl="/profile.jpg"
-              className="scale-75 md:scale-90 lg:scale-100"
-            />
-          </div>
-
-          {/* Text Content */}
-          <div
-            className={`lg:w-1/2 lg:order-1 text-center lg:text-left -mt-1 sm:-mt-3 lg:mt-0 ${
-              isVisible ? "animate-fadeInUp" : "opacity-0"
-            }`}
-          >
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 text-cyan-400">
-              Welcome To My Portfolio
-            </h1>
-
-            <p className="text-base md:text-lg text-gray-300 mb-6">
-              Saya adalah Fullstack Developer yang berfokus pada pengembangan
-              aplikasi web modern, scalable, dan efisien.
-            </p>
-
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <a
-                href="/cv/Ade-CV.pdf"
-                download
-                className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-black font-semibold transition"
-              >
-                Download CV
-              </a>
-
-              <a
-                href="https://wa.me/6285712455030"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-xl border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black font-semibold transition"
-              >
-                Contact Me
-              </a>
-            </div>
-          </div>
-
-        </div>
+      {/* Card */}
+      <div
+        ref={cardRef}
+        className="relative transition-transform duration-300 ease-out"
+        style={{
+          width: CARD_SIZE,
+          height: CARD_SIZE,
+          borderRadius: "50%",
+          transformStyle: "preserve-3d",
+          background: "#020617",
+          boxShadow:
+            "0 0 40px rgba(34,211,238,0.5), 0 0 90px rgba(56,189,248,0.3)",
+        }}
+      >
+        <img
+          src={avatarUrl}
+          alt="Profile"
+          className="absolute inset-0 w-full h-full object-cover rounded-full"
+          style={{ transform: "translateZ(40px)" }}
+        />
       </div>
-    </section>
+    </div>
   );
 }
