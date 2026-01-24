@@ -21,6 +21,11 @@ interface ProfileCardCircleHoloProps {
 }
 
 /* =======================
+   UTILS
+======================= */
+const lerp = (a: number, b: number, n: number) => a + (b - a) * n;
+
+/* =======================
    COMPONENT
 ======================= */
 export default function ProfileCardCircleHolo({
@@ -48,7 +53,7 @@ export default function ProfileCardCircleHolo({
   }, []);
 
   /* =======================
-     DESKTOP POINTER EFFECT
+     DESKTOP SMOOTH HOVER
   ======================= */
   useEffect(() => {
     if (isMobile) return;
@@ -57,38 +62,56 @@ export default function ProfileCardCircleHolo({
     const wrapper = wrapperRef.current;
     if (!card || !wrapper) return;
 
-    const move = (e: PointerEvent) => {
-      const r = wrapper.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width;
-      const y = (e.clientY - r.top) / r.height;
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let rafId: number;
 
-      wrapper.style.setProperty("--px", `${x}`);
-      wrapper.style.setProperty("--py", `${y}`);
+    const animate = () => {
+      currentX = lerp(currentX, targetX, 0.08);
+      currentY = lerp(currentY, targetY, 0.08);
 
       card.style.transform = `
-        rotateX(${(y - 0.5) * -14}deg)
-        rotateY(${(x - 0.5) * 14}deg)
-        scale(1.02)
+        rotateX(${currentY}deg)
+        rotateY(${currentX}deg)
+        scale(1.03)
       `;
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const move = (e: PointerEvent) => {
+      const r = wrapper.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+
+      targetX = x * 14;
+      targetY = -y * 14;
+
+      wrapper.style.setProperty("--px", `${x + 0.5}`);
+      wrapper.style.setProperty("--py", `${y + 0.5}`);
     };
 
     const reset = () => {
-      wrapper.style.setProperty("--px", "0.5");
-      wrapper.style.setProperty("--py", "0.5");
-      card.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+      targetX = 0;
+      targetY = 0;
     };
 
     wrapper.addEventListener("pointermove", move);
     wrapper.addEventListener("pointerleave", reset);
 
     return () => {
+      cancelAnimationFrame(rafId);
       wrapper.removeEventListener("pointermove", move);
       wrapper.removeEventListener("pointerleave", reset);
     };
   }, [isMobile]);
 
   /* =======================
-     MOBILE GYRO EFFECT 🔥
+     MOBILE GYRO (SMOOTH)
   ======================= */
   useEffect(() => {
     if (!isMobile) return;
@@ -97,24 +120,38 @@ export default function ProfileCardCircleHolo({
     const wrapper = wrapperRef.current;
     if (!card || !wrapper) return;
 
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      const gamma = e.gamma ?? 0; // left-right (-90 to 90)
-      const beta = e.beta ?? 0;   // front-back (-180 to 180)
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let rafId: number;
 
-      const x = Math.min(Math.max(gamma / 45 + 0.5, 0), 1);
-      const y = Math.min(Math.max(beta / 90 + 0.5, 0), 1);
-
-      wrapper.style.setProperty("--px", `${x}`);
-      wrapper.style.setProperty("--py", `${y}`);
+    const animate = () => {
+      currentX = lerp(currentX, targetX, 0.05);
+      currentY = lerp(currentY, targetY, 0.05);
 
       card.style.transform = `
-        rotateX(${beta * -0.15}deg)
-        rotateY(${gamma * 0.15}deg)
-        scale(1.02)
+        rotateX(${currentY}deg)
+        rotateY(${currentX}deg)
+        scale(1.03)
       `;
+
+      rafId = requestAnimationFrame(animate);
     };
 
-    // iOS permission
+    animate();
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      const gamma = e.gamma ?? 0;
+      const beta = e.beta ?? 0;
+
+      targetX = gamma * 0.12;
+      targetY = -beta * 0.12;
+
+      wrapper.style.setProperty("--px", `${gamma / 90 + 0.5}`);
+      wrapper.style.setProperty("--py", `${beta / 180 + 0.5}`);
+    };
+
     if (
       typeof DeviceOrientationEvent !== "undefined" &&
       typeof (DeviceOrientationEvent as any).requestPermission === "function"
@@ -131,6 +168,7 @@ export default function ProfileCardCircleHolo({
     }
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("deviceorientation", handleOrientation);
     };
   }, [isMobile]);
@@ -162,7 +200,7 @@ export default function ProfileCardCircleHolo({
               transparent 70%
             )
           `,
-          transform: `scale(${hovered || isMobile ? 1.1 : 0.7})`,
+          transform: `scale(${hovered || isMobile ? 1.1 : 0.75})`,
         }}
       />
 
@@ -183,7 +221,7 @@ export default function ProfileCardCircleHolo({
       {/* CARD */}
       <div
         ref={cardRef}
-        className="relative grid place-items-center transition-transform duration-300"
+        className="relative grid place-items-center will-change-transform"
         style={{
           width: CARD_SIZE,
           height: CARD_SIZE,
