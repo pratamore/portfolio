@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" font-family="monospace"><rect width="400" height="300" fill="#0d0d0d"/><rect x=".5" y=".5" width="399" height="22" fill="#141414" stroke="#222"/><circle cx="12" cy="11" r="3" fill="#333"/><circle cx="23" cy="11" r="3" fill="#333"/><circle cx="34" cy="11" r="3" fill="#333"/>
+<rect x="16" y="38" width="250" height="200" fill="none" stroke="#2a2a2a"/>
+<g fill="#858585" font-size="9"><text x="26" y="58">BARANG</text><text x="170" y="58">JUMLAH</text><text x="226" y="58">TOTAL</text></g>
+<g font-size="9" fill="#F5F5F0"><text x="26" y="82">Kopi Susu</text><text x="176" y="82">2</text><text x="226" y="82">36.000</text>
+<text x="26" y="106">Roti Bakar</text><text x="176" y="106">1</text><text x="226" y="106">18.000</text>
+<text x="26" y="130">Teh Tarik</text><text x="176" y="130">3</text><text x="226" y="130">45.000</text></g>
+<rect x="278" y="38" width="106" height="200" fill="none" stroke="#2a2a2a"/>
+<text x="288" y="58" font-size="9" fill="#858585">TOTAL</text>
+<text x="288" y="90" font-size="20" font-weight="bold" fill="#C8FF3D">99.000</text>
+<rect x="288" y="200" width="86" height="26" fill="#C8FF3D"/>
+<text x="331" y="217" font-size="10" fill="#080808" text-anchor="middle" font-weight="bold">BAYAR</text></svg>

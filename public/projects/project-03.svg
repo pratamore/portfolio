@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" font-family="monospace"><rect width="400" height="300" fill="#0d0d0d"/><rect x=".5" y=".5" width="399" height="22" fill="#141414" stroke="#222"/><circle cx="12" cy="11" r="3" fill="#333"/><circle cx="23" cy="11" r="3" fill="#333"/><circle cx="34" cy="11" r="3" fill="#333"/>
+<g font-size="10" fill="#858585">
+<text x="20" y="52">agung@kali:~$ nmap -sV target.lab</text>
+<text x="20" y="72" fill="#F5F5F0">PORT   STATUS LAYANAN</text>
+<text x="20" y="90" fill="#F5F5F0">22/tcp terbuka  ssh</text>
+<text x="20" y="108" fill="#F5F5F0">80/tcp terbuka  http</text>
+<text x="20" y="136">agung@kali:~$ sqlmap --batch -u ...</text>
+<text x="20" y="156" fill="#C8FF3D">[INFO] parameter 'id' dapat disuntikkan</text>
+<text x="20" y="184">agung@kali:~$ <tspan fill="#C8FF3D">█</tspan></text></g></svg>
