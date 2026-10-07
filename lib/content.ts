@@ -1,11 +1,11 @@
-export const EMAIL = "agungputra2820@email.com"; // Ganti dengan email aslimu
+export const EMAIL = "agung@email.com"; // Ganti dengan email aslimu
 
 export const navItems = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skill" },
-  { href: "#projects", label: "Project" },
-  { href: "#contact", label: "Contact" },
+  { href: "#home", label: "Beranda" },
+  { href: "#about", label: "Tentang" },
+  { href: "#skills", label: "Keahlian" },
+  { href: "#projects", label: "Proyek" },
+  { href: "#contact", label: "Kontak" },
 ];
 
 export const photo: string | null = null; // contoh: "/foto.jpg"
@@ -41,6 +41,6 @@ export const projects = [
 
 export const contacts = [
   { label: "Email", text: EMAIL, href: `mailto:${EMAIL}` },
-  { label: "GitHub", text: "https://github.com/pratamore", href: "https://github.com/pratamore" },
+  { label: "GitHub", text: "github.com/agungdev", href: "https://github.com/" },
   { label: "LinkedIn", text: "linkedin.com/in/agung", href: "https://linkedin.com/" },
 ];

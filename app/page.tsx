@@ -18,7 +18,7 @@ export default function Home() {
           <h1 className="h1 disp">
             <span className="l rv">Halo, Saya</span>
             <span className="l rv d1">Agung.</span>
-            <span className="l rv d2">Seorang Web Development.</span>
+            <span className="l rv d2">Saya bangun untuk web.</span>
           </h1>
           <div className="sub rv d3">
             <p>Mahasiswa Teknik Informatika yang gemar membuat situs web, mengutak-atik sistem Linux, dan mempelajari cara menjaganya tetap aman.</p>

@@ -39,10 +39,11 @@ export default function Intro() {
     <div id="intro" className={out ? "out" : ""} aria-hidden="true">
       <div className="tl">AGUNG°</div>
       <div className="tr mono" style={{ color: "var(--tx)" }}>Portofolio / 2026</div>
+      <button id="skip" className="mono" type="button" onClick={finish}>Lewati</button>
       <div className="st disp">
-        <span className="ln-w"><span>WELCOME</span></span>
-        <span className="ln-w"><span>TO MY.</span></span>
-        <span className="ln-w"><span>PORTFOLIO.</span></span>
+        <span className="ln-w"><span>Halo.</span></span>
+        <span className="ln-w"><span>Saya Agung.</span></span>
+        <span className="ln-w"><span>Web Developer.</span></span>
       </div>
       <div className="bt">
         <span className="mono" style={{ color: "var(--tx)" }}>

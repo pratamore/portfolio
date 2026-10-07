@@ -7,6 +7,7 @@ const grotesk = Space_Grotesk({ subsets: ["latin"], weight: ["500", "700"], vari
 const mono = Space_Mono({ subsets: ["latin"], weight: "400", variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
   title: "Agung — Portofolio 2026",
   description: "Portofolio Agung, mahasiswa Teknik Informatika, web developer dan digital creator.",
 };

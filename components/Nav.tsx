@@ -16,10 +16,13 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle("lock", open);
+    document.body.classList.toggle("menu-open", open);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
+    return () => {
+      removeEventListener("keydown", onKey);
+      document.body.classList.remove("menu-open");
+    };
   }, [open]);
 
   return (
